@@ -9,16 +9,24 @@ part of 'main_todo_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$MainTodoController on _MainTodoControllerBase, Store {
+  Computed<int>? _$totalCheckedComputed;
+
+  @override
+  int get totalChecked =>
+      (_$totalCheckedComputed ??= Computed<int>(() => super.totalChecked,
+              name: '_MainTodoControllerBase.totalChecked'))
+          .value;
+
   final _$todoListAtom = Atom(name: '_MainTodoControllerBase.todoList');
 
   @override
-  ObservableList<TodoEntity> get todoList {
+  ObservableList<TodoModel> get todoList {
     _$todoListAtom.reportRead();
     return super.todoList;
   }
 
   @override
-  set todoList(ObservableList<TodoEntity> value) {
+  set todoList(ObservableList<TodoModel> value) {
     _$todoListAtom.reportWrite(value, super.todoList, () {
       super.todoList = value;
     });
@@ -28,22 +36,11 @@ mixin _$MainTodoController on _MainTodoControllerBase, Store {
       ActionController(name: '_MainTodoControllerBase');
 
   @override
-  dynamic addTodo(String description) {
+  dynamic addTodo(TodoModel newModel) {
     final _$actionInfo = _$_MainTodoControllerBaseActionController.startAction(
         name: '_MainTodoControllerBase.addTodo');
     try {
-      return super.addTodo(description);
-    } finally {
-      _$_MainTodoControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic toggleTodo(int index) {
-    final _$actionInfo = _$_MainTodoControllerBaseActionController.startAction(
-        name: '_MainTodoControllerBase.toggleTodo');
-    try {
-      return super.toggleTodo(index);
+      return super.addTodo(newModel);
     } finally {
       _$_MainTodoControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -63,7 +60,8 @@ mixin _$MainTodoController on _MainTodoControllerBase, Store {
   @override
   String toString() {
     return '''
-todoList: ${todoList}
+todoList: ${todoList},
+totalChecked: ${totalChecked}
     ''';
   }
 }

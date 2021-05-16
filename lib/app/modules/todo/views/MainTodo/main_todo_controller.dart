@@ -1,35 +1,25 @@
-import 'package:explaning/app/shared/models/todo.dart';
+import 'package:explaning/app/modules/todo/models/todo_model.dart';
 import 'package:mobx/mobx.dart';
-import 'dart:math';
 part 'main_todo_controller.g.dart';
 
 class MainTodoController = _MainTodoControllerBase with _$MainTodoController;
 
 abstract class _MainTodoControllerBase with Store {
   @observable
-  ObservableList<TodoEntity> todoList = [
-    TodoEntity(id: '1', description: 'ajeitar esta lista', isCheck: false)
-  ].asObservable();
+  ObservableList<TodoModel> todoList =
+      [TodoModel(title: "Fazer uma lista")].asObservable();
+
+  @computed
+  int get totalChecked => todoList.where((element) => element.check).length;
 
   @action
-  addTodo(String description) {
-    int newId = new Random().nextInt(999999);
-    todoList.add(
-        TodoEntity(id: '$newId', description: description, isCheck: false));
-    print(description);
-  }
-
-  @action
-  toggleTodo(int index) {
-    print(index);
-    print(this.todoList[index].describe());
-    TodoEntity todoFinded = this.todoList[index];
-    todoFinded.isCheck = !todoFinded.isCheck;
-    this.todoList[index] = todoFinded;
+  addTodo(TodoModel newModel) {
+    this.todoList.add(newModel);
   }
 
   @action
   deleteTodo(int index) {
-    todoList.removeAt(index);
+    print(index);
+    this.todoList.removeAt(index);
   }
 }
